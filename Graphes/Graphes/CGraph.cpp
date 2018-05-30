@@ -2,6 +2,7 @@
 #include "CException.h"
 #include "CGraph.h"
 #include "CVertex.h"
+#include <algorithm>
 
 /***********************
 *** Copy constructor ***
@@ -190,7 +191,7 @@ unsigned int CGraph::GRAgetVertex(CVertex *VERParam)
 *******************************************/
 void CGraph::GRAreverseGraph(void)
 {
-	for (int uiLoop = 0; uiLoop < vGRAVertices.size(); uiLoop++)
+	for (unsigned int uiLoop = 0; uiLoop < vGRAVertices.size(); uiLoop++)
 	{
 		vGRAVertices[uiLoop]->VERswapArcs();
 	}
@@ -213,5 +214,64 @@ void CGraph :: GRAdisplayGraph() {
 
 	for (unsigned int uiLoop = 0 ; uiLoop < uiVectorSize ; uiLoop++) {
 		vGRAVertices[uiLoop]->VERdisplayVertex();
+	}
+}
+
+
+/***********************************************
+*** Compute the maximum independant vertices ***
+*** R : the vector of vertices' value        ***
+***********************************************/
+void CGraph :: GRAenuStableMax(vector<int> viParam) {
+
+	//sort(vGRAVertices.begin(), vGRAVertices.end());
+
+	if (viParam.empty()) {
+		viGRAStableMax.clear();
+	}
+
+	if (vGRAVertices.empty()) {
+		if (viParam.size() >= viGRAStableMax.size()) {
+			viGRAStableMax = viParam;
+		}
+	} else {
+		for (unsigned int uiLoop1 = 0 ; uiLoop1 < vGRAVertices.size() ; uiLoop1++) {
+
+			vector<CVertex*> vVERTemp;
+			vVERTemp.push_back(new CVertex(*vGRAVertices[uiLoop1]));
+
+			unsigned int uiVertexNumber = vGRAVertices[uiLoop1]->VERgetVertexNumber();
+			GRAFullyDeleteVertex(vGRAVertices[uiLoop1]);
+
+			viParam.push_back(uiVertexNumber);
+
+			GRAdisplayGraph();
+			cout << "viParam[0]" << viParam[0] << endl;
+			/*
+			unsigned int uiSize = GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingVectorSize();
+
+			// récupérer la taille avant
+			for (unsigned int uiLoop2 = 0 ; uiLoop2 < uiSize ; uiLoop2++) {
+				unsigned int uiVertexNumber = GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingArcDestination(uiLoop2);
+				vVERTemp.push_back(new CVertex(*GRAgetVertex(uiVertexNumber)));
+				
+				for (unsigned int uiLoop3 = 0 ; uiLoop3 < vGRAVertices.size() ; uiLoop3++) {
+
+					if (GRAgetVertexAtIndex(uiLoop3)->VERgetVertexNumber() == GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingArcDestination(uiLoop2)) {
+						GRAFullyDeleteVertex(vGRAVertices[uiLoop3]);
+					}
+				}
+			}
+
+			GRAenuStableMax(viParam);
+
+			for (unsigned int uiLoop = 0; uiLoop < vVERTemp.size(); uiLoop++) {
+				GRAaddVertex(vVERTemp[uiLoop]);
+			}
+
+			vVERTemp.clear();
+
+			sort(vGRAVertices.begin(), vGRAVertices.end());*/
+		}
 	}
 }

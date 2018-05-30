@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 	
-	vector<CGraph> GRAGraphs;
+	/*vector<CGraph> GRAGraphs;
 	
 	for (int iLoop = 1 ; iLoop < argc ; iLoop++) {
 
@@ -32,7 +32,27 @@ int main(int argc, char * argv[]) {
 		GRAGraphs[iLoop].GRAreverseGraph();
 		GRAGraphs[iLoop].GRAdisplayGraph();
 		cout << "==================================" << endl;
+	}*/
+
+	CFileReader FIRfileReader("C:\\Users\\Boop\\Desktop\\graphe.txt");
+
+	try {
+		FIRfileReader.FIRImportFromFile();
 	}
+	catch (CException EXCError) {
+		EXCError.EXCDisplay();
+	}
+	
+	CGraph graph(FIRfileReader);
+
+	graph.GRAdisplayGraph();
+
+	cout << "============================" << endl;
+
+	vector<int> viParam;
+	graph.GRAenuStableMax(viParam);
+
+	getchar();
 
 	return 0;
 }

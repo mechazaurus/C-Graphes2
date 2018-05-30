@@ -16,6 +16,7 @@ private :
 
 	// Attributes
 	vector<CVertex*> vGRAVertices;
+	vector<int> viGRAStableMax;
 
 public :
 
@@ -107,6 +108,12 @@ public :
 	*** Display the graph ***
 	************************/
 	void GRAdisplayGraph();
+
+	/************************************************
+	 *** Compute the maximum independant vertices ***
+	 *** R : the vector of vertices' value        ***
+	 ***********************************************/
+	void GRAenuStableMax(vector<int> viParam);
 };
 
 #endif
