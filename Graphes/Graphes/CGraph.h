@@ -17,6 +17,7 @@ private :
 	// Attributes
 	vector<CVertex*> vGRAVertices;
 	vector<int> viGRAStableMax;
+	unsigned int uiGRAStableMaxLength;
 
 public :
 

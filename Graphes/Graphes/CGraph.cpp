@@ -205,18 +205,27 @@ void CGraph::GRAreverseGraph(void)
 /************************
 *** Display the graph ***
 ************************/
-void CGraph :: GRAdisplayGraph() {
+void CGraph::GRAdisplayGraph() {
 
 	cout << "Composition du graphe :" << endl;
 	cout << endl;
 
 	unsigned int uiVectorSize = vGRAVertices.size();
 
-	for (unsigned int uiLoop = 0 ; uiLoop < uiVectorSize ; uiLoop++) {
+	for (unsigned int uiLoop = 0; uiLoop < uiVectorSize; uiLoop++) {
 		vGRAVertices[uiLoop]->VERdisplayVertex();
 	}
-}
 
+	vector<int> viParam;
+	GRAenuStableMax(viParam);
+
+	cout << "Ensemble maximum de sommets independants :" << endl;
+	for (unsigned int uiLoop = 0; uiLoop < uiGRAStableMaxLength ; uiLoop++) {
+		cout << viGRAStableMax[uiLoop] << " ";
+		if (uiLoop == uiGRAStableMaxLength - 1);
+			cout << endl;
+	}
+}
 
 /***********************************************
 *** Compute the maximum independant vertices ***
@@ -224,18 +233,16 @@ void CGraph :: GRAdisplayGraph() {
 ***********************************************/
 void CGraph :: GRAenuStableMax(vector<int> viParam) {
 
-	//sort(vGRAVertices.begin(), vGRAVertices.end());
-
 	if (viParam.empty()) {
 		viGRAStableMax.clear();
 	}
-
+	/*
 	if (vGRAVertices.empty()) {
 		if (viParam.size() >= viGRAStableMax.size()) {
 			viGRAStableMax = viParam;
 		}
 	} else {
-		for (unsigned int uiLoop1 = 0 ; uiLoop1 < vGRAVertices.size() ; uiLoop1++) {
+		for (unsigned int uiLoop1 = 0 ; uiLoop1 < 1 ; uiLoop1++) {
 
 			vector<CVertex*> vVERTemp;
 			vVERTemp.push_back(new CVertex(*vGRAVertices[uiLoop1]));
@@ -245,9 +252,8 @@ void CGraph :: GRAenuStableMax(vector<int> viParam) {
 
 			viParam.push_back(uiVertexNumber);
 
-			GRAdisplayGraph();
-			cout << "viParam[0]" << viParam[0] << endl;
-			/*
+			//GRAdisplayGraph();
+
 			unsigned int uiSize = GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingVectorSize();
 
 			// récupérer la taille avant
@@ -270,8 +276,64 @@ void CGraph :: GRAenuStableMax(vector<int> viParam) {
 			}
 
 			vVERTemp.clear();
-
-			sort(vGRAVertices.begin(), vGRAVertices.end());*/
 		}
+	}*/
+
+	if (vGRAVertices.empty()) {
+		if (viParam.size() > uiGRAStableMaxLength) {
+			viGRAStableMax.clear();
+			viGRAStableMax = viParam;
+			uiGRAStableMaxLength = viParam.size();
+		} else if (viParam.size() == uiGRAStableMaxLength) {
+			viGRAStableMax = viParam;
+		}
+	} else {
+		vector<CVertex*> vVERTemp;
+
+		vVERTemp = vGRAVertices;
+
+		
+		for (unsigned int uiLoop = 0 ; uiLoop < vGRAVertices.size() ; uiLoop++) {
+			viParam.push_back(GRAgetVertexAtIndex(uiLoop)->VERgetVertexNumber());
+
+			unsigned int uiIncomingVectorSize = GRAgetVertexAtIndex(uiLoop)->VERgetIncomingVectorSize();
+			unsigned int uiOutcomingVectorSize = GRAgetVertexAtIndex(uiLoop)->VERgetOutcomingVectorSize();
+
+			for (unsigned int uiLoop2 = 0 ; uiLoop2 < uiIncomingVectorSize ; uiLoop2++) {
+					
+				unsigned int uiArcNumber = GRAgetVertexAtIndex(uiLoop)->VERgetIncomingArcDestination(uiLoop2);
+				cout << "Arc venant : " << uiArcNumber << endl;
+
+				for (unsigned int uiLoop22 = 0 ; uiLoop22 < vGRAVertices.size() ; uiLoop22++) {
+					if (uiArcNumber == GRAgetVertexAtIndex(uiLoop22)->VERgetVertexNumber()) {
+						vGRAVertices.erase(vGRAVertices.begin() + uiLoop22);
+					}
+				}
+			}
+
+			for (unsigned int uiLoop3 = 0 ; uiLoop3 < uiOutcomingVectorSize ; uiLoop3++) {
+
+				unsigned int uiArcNumber = GRAgetVertexAtIndex(uiLoop)->VERgetOutcomingArcDestination(uiLoop3);
+				cout << "Arc vers : " << uiArcNumber << endl;
+
+				for (unsigned int uiLoop32 = 0 ; uiLoop32 < vGRAVertices.size() ; uiLoop32++) {
+					if (uiArcNumber == GRAgetVertexAtIndex(uiLoop32)->VERgetVertexNumber()) {
+						vGRAVertices.erase(vGRAVertices.begin() + uiLoop32);
+					}
+				}
+			}
+
+			vGRAVertices.erase(vGRAVertices.begin() + uiLoop);
+
+			GRAenuStableMax(viParam);
+		}
+
+		vGRAVertices = vVERTemp;
+
+		for (unsigned int loop = 0 ; loop < viParam.size() ; loop++) {
+			cout << "viParam[" << loop << "] = " << viParam[loop] << endl;
+		}
+
+		vVERTemp.clear();
 	}
 }
