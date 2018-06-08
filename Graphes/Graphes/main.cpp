@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 		cout << "==================================" << endl;
 	}*/
 
-	CFileReader FIRfileReader("C:\\Users\\Boop\\Desktop\\graphe.txt");
+	CFileReader FIRfileReader("C:\\Users\\Irteza\\Desktop\\graphe4.txt");
 
 	try {
 		FIRfileReader.FIRImportFromFile();
@@ -50,8 +50,7 @@ int main(int argc, char * argv[]) {
 	cout << "============================" << endl;
 
 	vector<int> viParam;
-	graph.GRAenuStableMax(viParam);
-
+	graph.GRAenuStableMax();
 	getchar();
 
 	return 0;

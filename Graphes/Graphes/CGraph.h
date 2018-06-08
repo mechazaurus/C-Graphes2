@@ -114,7 +114,7 @@ public :
 	 *** Compute the maximum independant vertices ***
 	 *** R : the vector of vertices' value        ***
 	 ***********************************************/
-	void GRAenuStableMax(vector<int> viParam);
+	void GRAenuStableMax();
 };
 
 #endif

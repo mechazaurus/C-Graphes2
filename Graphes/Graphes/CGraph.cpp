@@ -4,6 +4,23 @@
 #include "CVertex.h"
 #include <algorithm>
 
+
+/**************************************************************************
+*** Function that returns index of Vextex with "numeroSommet" as number ***
+**************************************************************************/
+int getVertexIndex(vector<int> vecteurDeSommets, int numeroSommet)
+{
+	for (int uiIndex = 0; uiIndex < vecteurDeSommets.size(); uiIndex++)
+	{
+		if (vecteurDeSommets[uiIndex] == numeroSommet)
+		{
+			return uiIndex;
+		}
+	}
+	return -1;
+}
+
+
 /***********************
 *** Copy constructor ***
 ***********************/
@@ -216,124 +233,86 @@ void CGraph::GRAdisplayGraph() {
 		vGRAVertices[uiLoop]->VERdisplayVertex();
 	}
 
-	vector<int> viParam;
-	GRAenuStableMax(viParam);
-
-	cout << "Ensemble maximum de sommets independants :" << endl;
-	for (unsigned int uiLoop = 0; uiLoop < uiGRAStableMaxLength ; uiLoop++) {
-		cout << viGRAStableMax[uiLoop] << " ";
-		if (uiLoop == uiGRAStableMaxLength - 1);
-			cout << endl;
-	}
 }
 
 /***********************************************
 *** Compute the maximum independant vertices ***
 *** R : the vector of vertices' value        ***
 ***********************************************/
-void CGraph :: GRAenuStableMax(vector<int> viParam) {
+void CGraph :: GRAenuStableMax() 
+{
+	vector<int> initial;
+	vector<int> viTemp;
+	vector<int> viFinal;
 
-	if (viParam.empty()) {
-		viGRAStableMax.clear();
+	//Initialisation 
+	for (int uiLoop = 0; uiLoop < vGRAVertices.size(); uiLoop++)
+	{
+		initial.push_back(vGRAVertices[uiLoop]->VERgetVertexNumber());
 	}
-	/*
-	if (vGRAVertices.empty()) {
-		if (viParam.size() >= viGRAStableMax.size()) {
-			viGRAStableMax = viParam;
-		}
-	} else {
-		for (unsigned int uiLoop1 = 0 ; uiLoop1 < 1 ; uiLoop1++) {
 
-			vector<CVertex*> vVERTemp;
-			vVERTemp.push_back(new CVertex(*vGRAVertices[uiLoop1]));
-
-			unsigned int uiVertexNumber = vGRAVertices[uiLoop1]->VERgetVertexNumber();
-			GRAFullyDeleteVertex(vGRAVertices[uiLoop1]);
-
-			viParam.push_back(uiVertexNumber);
-
-			//GRAdisplayGraph();
-
-			unsigned int uiSize = GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingVectorSize();
-
-			// récupérer la taille avant
-			for (unsigned int uiLoop2 = 0 ; uiLoop2 < uiSize ; uiLoop2++) {
-				unsigned int uiVertexNumber = GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingArcDestination(uiLoop2);
-				vVERTemp.push_back(new CVertex(*GRAgetVertex(uiVertexNumber)));
-				
-				for (unsigned int uiLoop3 = 0 ; uiLoop3 < vGRAVertices.size() ; uiLoop3++) {
-
-					if (GRAgetVertexAtIndex(uiLoop3)->VERgetVertexNumber() == GRAgetVertexAtIndex(uiLoop1)->VERgetIncomingArcDestination(uiLoop2)) {
-						GRAFullyDeleteVertex(vGRAVertices[uiLoop3]);
-					}
-				}
-			}
-
-			GRAenuStableMax(viParam);
-
-			for (unsigned int uiLoop = 0; uiLoop < vVERTemp.size(); uiLoop++) {
-				GRAaddVertex(vVERTemp[uiLoop]);
-			}
-
-			vVERTemp.clear();
-		}
-	}*/
-
-	if (vGRAVertices.empty()) {
-		if (viParam.size() > uiGRAStableMaxLength) {
-			viGRAStableMax.clear();
-			viGRAStableMax = viParam;
-			uiGRAStableMaxLength = viParam.size();
-		} else if (viParam.size() == uiGRAStableMaxLength) {
-			viGRAStableMax = viParam;
-		}
-	} else {
-		vector<CVertex*> vVERTemp;
-
-		vVERTemp = vGRAVertices;
-
+	//Boucle principale
+	int ibouclePrincipale = 0;
+	bool check = false;
+	while (ibouclePrincipale < initial.size())
+	{
 		
-		for (unsigned int uiLoop = 0 ; uiLoop < vGRAVertices.size() ; uiLoop++) {
-			viParam.push_back(GRAgetVertexAtIndex(uiLoop)->VERgetVertexNumber());
+		viTemp.clear();
 
-			unsigned int uiIncomingVectorSize = GRAgetVertexAtIndex(uiLoop)->VERgetIncomingVectorSize();
-			unsigned int uiOutcomingVectorSize = GRAgetVertexAtIndex(uiLoop)->VERgetOutcomingVectorSize();
+		for (int uiLoop = 0; uiLoop < vGRAVertices.size(); uiLoop++)
+		{
+			viTemp.push_back(initial[uiLoop]);
+		}
 
-			for (unsigned int uiLoop2 = 0 ; uiLoop2 < uiIncomingVectorSize ; uiLoop2++) {
-					
-				unsigned int uiArcNumber = GRAgetVertexAtIndex(uiLoop)->VERgetIncomingArcDestination(uiLoop2);
-				cout << "Arc venant : " << uiArcNumber << endl;
-
-				for (unsigned int uiLoop22 = 0 ; uiLoop22 < vGRAVertices.size() ; uiLoop22++) {
-					if (uiArcNumber == GRAgetVertexAtIndex(uiLoop22)->VERgetVertexNumber()) {
-						vGRAVertices.erase(vGRAVertices.begin() + uiLoop22);
+		//Boucle Interieure
+		int iboucleInterieur = ibouclePrincipale;
+		bool checked = false;
+		while (iboucleInterieur < initial.size())
+		{
+			int index = getVertexIndex(viTemp, initial[iboucleInterieur]);
+			if (index != -1)
+			{
+				CVertex * temp = GRAgetVertex(viTemp[index]);
+				//Supression arcs entrant
+				for (int boucleIncoming = 0; boucleIncoming < temp->VERgetIncomingVectorSize(); boucleIncoming++)
+				{
+					unsigned int uiincomingDest = temp->VERgetIncomingArcDestination(boucleIncoming);
+					unsigned int incomingIndex = getVertexIndex(viTemp, uiincomingDest);
+					if (incomingIndex != -1)
+					{
+						viTemp.erase(viTemp.begin() + incomingIndex);
 					}
 				}
 			}
-
-			for (unsigned int uiLoop3 = 0 ; uiLoop3 < uiOutcomingVectorSize ; uiLoop3++) {
-
-				unsigned int uiArcNumber = GRAgetVertexAtIndex(uiLoop)->VERgetOutcomingArcDestination(uiLoop3);
-				cout << "Arc vers : " << uiArcNumber << endl;
-
-				for (unsigned int uiLoop32 = 0 ; uiLoop32 < vGRAVertices.size() ; uiLoop32++) {
-					if (uiArcNumber == GRAgetVertexAtIndex(uiLoop32)->VERgetVertexNumber()) {
-						vGRAVertices.erase(vGRAVertices.begin() + uiLoop32);
-					}
-				}
+			iboucleInterieur++;
+			if (iboucleInterieur == initial.size() && checked==false)
+			{
+				checked = true;
+				iboucleInterieur = 0;
 			}
-
-			vGRAVertices.erase(vGRAVertices.begin() + uiLoop);
-
-			GRAenuStableMax(viParam);
 		}
 
-		vGRAVertices = vVERTemp;
-
-		for (unsigned int loop = 0 ; loop < viParam.size() ; loop++) {
-			cout << "viParam[" << loop << "] = " << viParam[loop] << endl;
+		//Affichage intermediaire generee
+		cout <<"("<< ibouclePrincipale +1 <<") "<< " : ";
+		for (int uiLoop = 0; uiLoop < viTemp.size(); uiLoop++)
+		{
+			cout << viTemp[uiLoop] << " ";
 		}
+		cout << endl;
+		if (viFinal.empty())
+		{
+			viFinal = viTemp;
+		}
+		else if (viFinal.size() < viTemp.size())
+		{
+			viFinal = viTemp;
+		}
+		ibouclePrincipale++;
+	}
 
-		vVERTemp.clear();
+	//Affichage de la plus grande chaine de sommets
+	for (int uiLoop = 0; uiLoop < viFinal.size(); uiLoop++)
+	{
+		cout << viFinal[uiLoop] << " ";
 	}
 }
