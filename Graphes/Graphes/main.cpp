@@ -9,49 +9,24 @@
 using namespace std;
 
 int main(int argc, char * argv[]) {
-	
-	/*vector<CGraph> GRAGraphs;
-	
-	for (int iLoop = 1 ; iLoop < argc ; iLoop++) {
+
+	for (int iLoop = 1; iLoop < argc; iLoop++) {
 
 		CFileReader FIRfileReader(argv[iLoop]);
 
 		try {
 			FIRfileReader.FIRImportFromFile();
-		} catch (CException EXCError) {
+		}
+		catch (CException EXCError) {
 			EXCError.EXCDisplay();
 		}
 
-		GRAGraphs.push_back(CGraph(FIRfileReader));
+		CGraph graph(FIRfileReader);
+
+		graph.GRAdisplayGraph();
+		graph.GRAenuStableMax();
+
 	}
-
-	for (int iLoop = 0 ; iLoop < argc - 1 ; iLoop++) {
-		cout << endl << "Graphe " << iLoop + 1 << endl;
-		GRAGraphs[iLoop].GRAdisplayGraph();
-		cout << "Inversion des arcs..." << endl << endl;
-		GRAGraphs[iLoop].GRAreverseGraph();
-		GRAGraphs[iLoop].GRAdisplayGraph();
-		cout << "==================================" << endl;
-	}*/
-
-	CFileReader FIRfileReader("C:\\Users\\Irteza\\Desktop\\graphe4.txt");
-
-	try {
-		FIRfileReader.FIRImportFromFile();
-	}
-	catch (CException EXCError) {
-		EXCError.EXCDisplay();
-	}
-	
-	CGraph graph(FIRfileReader);
-
-	graph.GRAdisplayGraph();
-
-	cout << "============================" << endl;
-
-	vector<int> viParam;
-	graph.GRAenuStableMax();
-	getchar();
 
 	return 0;
 }

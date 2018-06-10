@@ -12,14 +12,14 @@ using namespace std;
 
 class CGraph {
 
-private :
+private:
 
 	// Attributes
 	vector<CVertex*> vGRAVertices;
 	vector<int> viGRAStableMax;
 	unsigned int uiGRAStableMaxLength;
 
-public :
+public:
 
 	/**************************
 	*** Default constructor ***
@@ -77,7 +77,7 @@ public :
 	*** R : The vertex                       ***
 	*******************************************/
 	CVertex* GRAgetVertexAtIndex(unsigned int uiParam) const;
-	
+
 	/*******************************************
 	*** Delete completely a Vertex           ***
 	***  E : The vertex to delete            ***
@@ -111,9 +111,9 @@ public :
 	void GRAdisplayGraph();
 
 	/************************************************
-	 *** Compute the maximum independant vertices ***
-	 *** R : the vector of vertices' value        ***
-	 ***********************************************/
+	*** Compute the maximum independant vertices ***
+	*** R : the vector of vertices' value        ***
+	***********************************************/
 	void GRAenuStableMax();
 };
 

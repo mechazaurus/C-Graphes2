@@ -13,7 +13,7 @@ using namespace std;
 
 class CVertex {
 
-private :
+private:
 
 	// Attributes
 	unsigned int uiVERNumber;
@@ -27,7 +27,7 @@ private :
 	***************************************/
 	CVertex();
 
-public :
+public:
 
 	/***********************
 	*** Copy constructor ***
@@ -56,9 +56,9 @@ public :
 	// Manipulations of incoming arcs
 
 	/************************************************
-	 *** Get the size of the incoming arcs vector ***
-	 *** R : the size of the vector               ***
-	 ***********************************************/
+	*** Get the size of the incoming arcs vector ***
+	*** R : the size of the vector               ***
+	***********************************************/
 	unsigned int VERgetIncomingVectorSize() const;
 
 	/***********************************************************************
@@ -68,15 +68,15 @@ public :
 	unsigned int VERgetIncomingArcDestination(unsigned int uiIndex) const;
 
 	/**********************************************
-	 *** Add an arc to the incoming arcs vector ***
-	 *** E : ARCParam the arc to add            ***
-	 *********************************************/
+	*** Add an arc to the incoming arcs vector ***
+	*** E : ARCParam the arc to add            ***
+	*********************************************/
 	void VERaddIncomingArc(CArc *ARCParam);
 
 	/***************************************************
-	 *** Delete an arc from the incoming arcs vector ***
-	 *** E : The arc to delete                       ***
-	 **************************************************/
+	*** Delete an arc from the incoming arcs vector ***
+	*** E : The arc to delete                       ***
+	**************************************************/
 	void VERdeleteIncomingArc(CArc *ARCParam);
 
 	/**********************************************************************
@@ -129,8 +129,8 @@ public :
 	// Other methods
 
 	/********************************************************
-	 *** Display the vertex's incoming and outcoming arcs ***
-	 *******************************************************/
+	*** Display the vertex's incoming and outcoming arcs ***
+	*******************************************************/
 	void VERdisplayVertex();
 };
 
